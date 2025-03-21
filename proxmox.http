@@ -1,0 +1,31 @@
+###
+
+GET {{PROXMOX_API_URL}}/api2/json/nodes
+Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
+###
+
+GET {{PROXMOX_API_URL}}/api2/json/nodes/pve
+Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
+###
+
+GET {{PROXMOX_API_URL}}/api2/json/version
+Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
+###
+
+
+GET {{PROXMOX_API_URL}}/api2/json/nodes/pve/status
+Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
+###
+
+GET {{PROXMOX_API_URL}}/api2/json/nodes/pve/lxc
+Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
+###
+
+GET {{PROXMOX_API_URL}}/api2/json/nodes/pve/qemu
+Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
