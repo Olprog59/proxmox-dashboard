@@ -5,8 +5,18 @@ Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
 
 ###
 
-GET {{PROXMOX_API_URL}}/api2/json/nodes/pve
+GET {{PROXMOX_API_URL}}/api2/json/cluster/status
 Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
+###
+
+GET {{PROXMOX_API_URL}}/api2/json/cluster/resources
+Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
+
+###
+
+# GET {{PROXMOX_API_URL}}/api2/json/nodes/pve
+# Authorization: PVEAPIToken={{PROXMOX_API_TOKEN_ID}}={{PROXMOX_API_TOKEN_SECRET}}
 
 ###
 

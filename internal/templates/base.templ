@@ -1,0 +1,33 @@
+package templates
+
+templ Base(title, currentPage string) {
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{ title } - Proxmox Manager</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.4"
+    integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+    crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    @Sidebar(currentPage)
+    <div class="flex-1">
+      <!-- Main content -->
+      <main class="container mx-auto px-4 py-6">
+        { children... }
+      </main>
+    </div>
+  </div>
+  <!-- Modal container for HTMX interactions -->
+  <div id="modal-container"></div>
+</body>
+
+</html>
+}

@@ -1,0 +1,81 @@
+package templates
+
+import "github.com/Olprog59/dashboard-proxmox/internal/models"
+import "fmt"
+import "github.com/Olprog59/dashboard-proxmox/internal/commons"
+
+templ DashboardNodes(titre string, list []models.ClusterResource) {
+	<div class="mb-6">
+		<div class="flex justify-between items-center mb-4">
+			<h2 class="text-xl font-bold">{ titre }</h2>
+		</div>
+		<div id="recent-clusters" class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+			for _,v := range list {
+				if v.Name != nil {
+					@DashboardNode(v)
+				}
+			}
+		</div>
+	</div>
+}
+
+templ DashboardNode(node models.ClusterResource) {
+	<div
+		class={ "bg-blue-50 p-4 rounded-lg shadow mb-4 transition-all duration-300 hover:shadow-md" ,
+  getOnline(*node.Uptime) }
+	>
+		<div class="flex items-center space-x-4">
+			<!-- Statut avec couleur adaptative -->
+			<div class="flex-shrink-0">
+				<div
+					class={ "h-12" , "w-12" , "rounded-full" , "flex" , "items-center" , "justify-center" ,
+        getOnline(*node.Uptime) }
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+						></path>
+					</svg>
+				</div>
+			</div>
+			<!-- Contenu principal -->
+			<div class="flex-1">
+				<h2 class="text-lg font-semibold text-blue-700">{ *node.Name }</h2>
+				<div class="grid grid-cols-2 gap-2 mt-2 text-sm">
+					<div>
+						<span class="font-medium text-gray-600">ID:</span>
+						<span class="text-gray-800">{ *node.ID }</span>
+					</div>
+					<div></div>
+					<div>
+						<span class="font-medium text-gray-600">Nb CPU:</span>
+						<span class="text-gray-800">{ fmt.Sprintf("%d",*node.Maxcpu) }</span>
+					</div>
+					<div>
+						<span class="font-medium text-gray-600">CPU:</span>
+						<span class="text-gray-800">{ fmt.Sprintf("%.2f",*node.CPU * 100) }</span>
+					</div>
+					<div>
+						<span class="font-medium text-gray-600">Max Mem:</span>
+						<span class="text-gray-800">{ commons.TransformBytesForHuman(*node.Maxmem,0) }</span>
+					</div>
+					<div>
+						<span class="font-medium text-gray-600">Mem:</span>
+						<span class="text-gray-800">{ commons.TransformBytesForHuman(*node.Mem, 2) }</span>
+					</div>
+					<div>
+						<span class="font-medium text-gray-600">Max Disk:</span>
+						<span class="text-gray-800">{ commons.TransformBytesForHuman(*node.Maxdisk, 0) }</span>
+					</div>
+					<div>
+						<span class="font-medium text-gray-600">Disk:</span>
+						<span class="text-gray-800">{ commons.TransformBytesForHuman(*node.Disk, 2) }</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}

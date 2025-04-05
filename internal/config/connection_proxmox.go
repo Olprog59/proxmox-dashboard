@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/Olprog59/golog"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -58,10 +57,14 @@ func Load() (*Config, error) {
 }
 
 // Fonction pour surveiller les modifications du fichier de configuration
-func WatchConfig() {
+func WatchConfig() chan struct{} {
+	configCh := make(chan struct{})
+
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		golog.Info("Le fichier de configuration a été modifié :", e.Name)
 		// Recharger la configuration ou appliquer les modifications nécessaires
+		configCh <- struct{}{}
 	})
+
+	return configCh
 }

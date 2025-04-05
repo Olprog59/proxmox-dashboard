@@ -1,0 +1,10 @@
+server:
+  address: ":8080"
+log:
+  level: "info"
+debug: true
+clusters:
+  - name: "Homelab PVE"
+    api_url: "https://192.168.1.10:8006"
+    secret_id: "root@pam!dashboard"
+    secret_token: "7ac3c565-21ab-47dc-bc63-33e7e5fde861"

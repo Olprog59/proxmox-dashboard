@@ -1,5 +1,0 @@
-###
-
-GET {{PROXMOX_API_URL}}/api/cluster
-
-###
