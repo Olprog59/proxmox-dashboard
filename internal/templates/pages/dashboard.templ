@@ -1,0 +1,16 @@
+package templates_pages
+
+import "github.com/Olprog59/dashboard-proxmox/internal/templates"
+
+templ Dashboard(title, currentPage string) {
+	@templates.Base(title, currentPage) {
+		<div class="bg-white rounded-lg shadow-md p-6">
+			<h1 class="text-2xl font-bold mb-6">Tableau de bord Proxmox</h1>
+			<!-- Éléments à mettre à jour -->
+			<div id="dashboard-count" hx-get="/clusters/dashboard-count" hx-trigger="load, every 5s"></div>
+			<div id="nodes-list" class="mb-6" hx-get="/nodes" hx-trigger="load, every 5s"></div>
+			<div id="nodes-lxc" class="mb-6" hx-get="/nodes/lxc" hx-trigger="load, every 5s"></div>
+			<div id="nodes-vm" class="mb-6" hx-get="/nodes/vm" hx-trigger="load, every 5s"></div>
+		</div>
+	}
+}

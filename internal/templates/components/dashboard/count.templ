@@ -1,0 +1,40 @@
+package templates_component_dashboard
+
+import "fmt"
+
+templ DashboardCount(countClusters, countNodes, countVMs, countLXCs int) {
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+		<div class="bg-blue-50 p-4 rounded-lg shadow">
+			<h2 class="text-lg font-semibold text-blue-700">Clusters</h2>
+			if countClusters > 0 {
+				<p>{ fmt.Sprintf("%d",countClusters) }</p>
+			} else {
+				<p>...</p>
+			}
+		</div>
+		<div class="bg-green-50 p-4 rounded-lg shadow">
+			<h2 class="text-lg font-semibold text-green-700">Nodes</h2>
+			if countNodes > 0 {
+				<p>{ fmt.Sprintf("%d",countNodes) }</p>
+			} else {
+				<p>...</p>
+			}
+		</div>
+		<div class="bg-purple-50 p-4 rounded-lg shadow">
+			<h2 class="text-lg font-semibold text-purple-700">VMs</h2>
+			if countVMs > 0 {
+				<p>{ fmt.Sprintf("%d",countVMs) }</p>
+			} else {
+				<p>...</p>
+			}
+		</div>
+		<div class="bg-orange-50 p-4 rounded-lg shadow">
+			<h2 class="text-lg font-semibold text-orange-700">Containers LXC</h2>
+			if countLXCs > 0 {
+				<p>{ fmt.Sprintf("%d",countLXCs) }</p>
+			} else {
+				<p>...</p>
+			}
+		</div>
+	</div>
+}

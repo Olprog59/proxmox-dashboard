@@ -6,9 +6,9 @@ import (
 	"github.com/Olprog59/dashboard-proxmox/internal/models"
 )
 
-func (s *Service) DashboardGetNodeLxcOrVm(t models.Type) []models.ClusterResource {
-	lxc := make([]models.ClusterResource, 0)
-	for _, v := range s.clusters {
+func DashboardGetNodeLxcOrVm(c []*models.NodeResource, t models.Type) []*models.NodeResource {
+	lxc := make([]*models.NodeResource, 0)
+	for _, v := range c {
 		if v.Type != nil && *v.Type == t {
 			lxc = append(lxc, v)
 		}

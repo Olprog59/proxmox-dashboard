@@ -10,18 +10,18 @@ import (
 )
 
 type Service struct {
-	mu           sync.RWMutex
-	cfg          *config.Config
-	clusters     []models.ClusterResource
-	clustersInfo []models.Cluster
+	mu            sync.RWMutex
+	cfg           *config.Config
+	nodesResource []*models.NodeResource
+	clustersInfo  []*models.Cluster
 }
 
 // NewServer crée une nouvelle instance de serveur
 func NewService(cfg *config.Config) *Service {
 	s := &Service{
-		cfg:          cfg,
-		clusters:     make([]models.ClusterResource, 0),
-		clustersInfo: make([]models.Cluster, 0),
+		cfg:           cfg,
+		nodesResource: make([]*models.NodeResource, 0),
+		clustersInfo:  make([]*models.Cluster, 0),
 	}
 	return s
 }
@@ -33,85 +33,61 @@ func (s *Service) UpdateConfig(cfg *config.Config) {
 	s.cfg = cfg
 
 	// Vider les caches pour qu'ils soient rechargés avec la nouvelle config
-	s.clusters = make([]models.ClusterResource, 0)
-	s.clustersInfo = make([]models.Cluster, 0)
+	s.nodesResource = make([]*models.NodeResource, 0)
+	s.clustersInfo = make([]*models.Cluster, 0)
 
 	golog.Info("Configuration du service mise à jour avec succès")
 }
 
 // GetClusterResources récupère les ressources des clusters
-func (s *Service) GetClusterResources() error {
+func (s *Service) GetNodesResource() ([]*models.NodeResource, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	newClusters := make([]models.ClusterResource, 0)
+	newClusters := make([]*models.NodeResource, 0)
 
 	for _, cluster := range s.cfg.Clusters {
-		clusters, err := DoRequest[models.ClusterResource]("GET", "/cluster/resources", cluster, nil)
+		clusters, err := DoRequest[*models.NodeResource]("GET", "/cluster/resources", cluster, nil)
 		if err != nil {
 			golog.Err("%s", err.Error())
-			return err
+			return nil, err
 		}
 		newClusters = append(newClusters, clusters...)
 	}
 
-	s.clusters = newClusters
-	return nil
+	s.nodesResource = newClusters
+	return newClusters, nil
 }
 
 // GetClusters récupère les informations sur les clusters
-func (s *Service) GetClusters() error {
+func (s *Service) GetClusters() ([]*models.Cluster, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	newClustersInfo := make([]models.Cluster, 0)
+	newClustersInfo := make([]*models.Cluster, 0)
 
 	for _, cluster := range s.cfg.Clusters {
-		clusters, err := DoRequest[models.Cluster]("GET", "/cluster/status", cluster, nil)
+		clusters, err := DoRequest[*models.Cluster]("GET", "/cluster/status", cluster, nil)
 		if err != nil {
 			golog.Err("%s", err.Error())
-			return err
+			return nil, err
 		}
 		newClustersInfo = append(newClustersInfo, clusters...)
 	}
 
 	s.clustersInfo = newClustersInfo
-	return nil
-}
-
-// GetClustersData retourne les données des clusters stockées en mémoire
-func (s *Service) GetClustersData() []models.ClusterResource {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-
-	// Retourner une copie pour éviter les problèmes de concurrence
-	result := make([]models.ClusterResource, len(s.clusters))
-	copy(result, s.clusters)
-
-	return result
-}
-
-// GetClustersInfo retourne les informations des clusters stockées en mémoire
-func (s *Service) GetClustersInfo() []models.Cluster {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-
-	// Retourner une copie pour éviter les problèmes de concurrence
-	result := make([]models.Cluster, len(s.clustersInfo))
-	copy(result, s.clustersInfo)
-
-	return result
+	return newClustersInfo, nil
 }
 
 // GetClustersLastUptime retourne les nodes ayant un uptime plus récent
-func (s *Service) GetClustersLastUptime() []models.ClusterResource {
+func (s *Service) GetClustersLastUptime() []*models.NodeResource {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
 	// Retourner une copie pour éviter les problèmes de concurrence
-	result := make([]models.ClusterResource, len(s.clusters))
+	result := make([]*models.NodeResource, len(s.nodesResource))
 
-	for _, b := range s.clusters {
+	for _, b := range s.nodesResource {
 		if *b.Type == models.Node {
 			result = append(result, b)
 		}
@@ -133,7 +109,7 @@ func (s *Service) CountClustersByType(t models.Type) int {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	return countTypes(s.clusters, t)
+	return countTypes(s.nodesResource, t)
 }
 
 // GetClusterCount retourne le nombre de clusters configurés
@@ -144,7 +120,7 @@ func (s *Service) GetClusterCount() int {
 	return len(s.cfg.Clusters)
 }
 
-func countTypes(clusters []models.ClusterResource, t models.Type) int {
+func countTypes(clusters []*models.NodeResource, t models.Type) int {
 	count := 0
 	for _, d := range clusters {
 		if d.Type != nil {

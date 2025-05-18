@@ -14,7 +14,7 @@ type Cluster struct {
 	Status string `json:"status"`
 }
 
-type ClusterResource struct {
+type NodeResource struct {
 	Maxcpu     *int     `json:"maxcpu,omitempty"`
 	CPU        *float64 `json:"cpu,omitempty"`
 	Status     *Hastate `json:"status,omitempty"`

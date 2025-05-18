@@ -6,7 +6,7 @@ import (
 	"github.com/Olprog59/dashboard-proxmox/internal/commons"
 	"github.com/Olprog59/dashboard-proxmox/internal/models"
 	"github.com/Olprog59/dashboard-proxmox/internal/service"
-	"github.com/Olprog59/dashboard-proxmox/internal/templates"
+	templates_component_dashboard "github.com/Olprog59/dashboard-proxmox/internal/templates/components/dashboard"
 )
 
 type Handlers struct {
@@ -24,5 +24,5 @@ func (h *Handlers) DashboardCountHandler(w http.ResponseWriter, r *http.Request)
 	countNodes := h.serv.CountClustersByType(models.Node)
 	countVMs := h.serv.CountClustersByType(models.Qemu)
 	countLXCs := h.serv.CountClustersByType(models.Lxc)
-	templates.DashboardCount(countCluster, countNodes, countVMs, countLXCs).Render(r.Context(), w)
+	templates_component_dashboard.DashboardCount(countCluster, countNodes, countVMs, countLXCs).Render(r.Context(), w)
 }

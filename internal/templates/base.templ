@@ -1,8 +1,10 @@
 package templates
 
+import "github.com/Olprog59/dashboard-proxmox/internal/templates/layouts"
+
 templ Base(title, currentPage string) {
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" hx-ext="sse">
 
 <head>
   <meta charset="UTF-8" />
@@ -17,10 +19,10 @@ templ Base(title, currentPage string) {
 <body class="bg-gray-100 min-h-screen">
   <div class="flex">
     <!-- Sidebar -->
-    @Sidebar(currentPage)
+    @templates_layouts.Sidebar(currentPage)
     <div class="flex-1">
       <!-- Main content -->
-      <main class="container mx-auto px-4 py-6">
+      <main class="container mx-auto px-4 py-6 md:pl-64">
         { children... }
       </main>
     </div>

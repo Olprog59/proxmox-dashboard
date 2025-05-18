@@ -1,9 +1,10 @@
-package templates
+package templates_component_dashboard
 
 import "github.com/Olprog59/dashboard-proxmox/internal/models"
 import "fmt"
+import template_commons "github.com/Olprog59/dashboard-proxmox/internal/templates/commons"
 
-templ ClusterStatus(clusterList []models.Cluster) {
+templ ClusterStatus(clusterList []*models.Cluster) {
 	<div class="mb-6">
 		<div class="flex justify-between items-center mb-4">
 			<h2 class="text-xl font-bold">Nodes</h2>
@@ -11,20 +12,22 @@ templ ClusterStatus(clusterList []models.Cluster) {
 		</div>
 		<div id="recent-clusters" class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
 			for _,v := range clusterList {
-				@CardNode(v)
+				if v != nil {
+					@CardNode(v)
+				}
 			}
 		</div>
 	</div>
 }
 
-templ CardNode(node models.Cluster) {
+templ CardNode(node *models.Cluster) {
 	<div class="bg-blue-50 p-4 rounded-lg shadow mb-4 transition-all duration-300 hover:shadow-md">
 		<div class="flex items-center space-x-4">
 			<!-- Statut avec couleur adaptative -->
 			<div class="flex-shrink-0">
 				<div
 					class={ "h-12" , "w-12" , "rounded-full" , "flex" , "items-center" , "justify-center" ,
-        getOnline(node.Online) }
+        template_commons.GetOnline(node.Online, nil) }
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path
@@ -46,7 +49,7 @@ templ CardNode(node models.Cluster) {
 					</div>
 					<div>
 						<span class="font-medium text-gray-600">Statut:</span>
-						<span class={ "rounded px-2 py-1 text-xs" , getOnline(node.Online) }>
+						<span class={ "rounded px-2 py-1 text-xs" , template_commons.GetOnline(node.Online, nil) }>
 							if node.Online == 0 {
 								Hors ligne
 							} else {
